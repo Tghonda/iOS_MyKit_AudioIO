@@ -8,8 +8,14 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+#import "MyKit_AudioIO.h"
+#import "MyKit_AudioBuffer.h"
 
+@interface ViewController ()
+{
+    MyKit_AudioBuffer   *audio_buf;
+    MyKit_AudioIO       *audio_io;
+}
 @end
 
 @implementation ViewController
@@ -17,11 +23,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    audio_buf = [[MyKit_AudioBuffer alloc] initWithBufferSize:30*44100*4];
+    audio_io = [[MyKit_AudioIO alloc] initWithBuffer:audio_buf ];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)pushRec:(id)sender {
+    [audio_io stop];
+    [audio_buf rewindPush];
+    
+    [audio_io rec];
+}
+
+- (IBAction)pushPlay:(id)sender {
+    [audio_io stop];
+    [audio_buf rewindPop];
+    
+    [audio_io play];
+}
+
+- (IBAction)pushStop:(id)sender {
+    [audio_io stop];
 }
 
 @end

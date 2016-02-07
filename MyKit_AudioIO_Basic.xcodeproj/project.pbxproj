@@ -15,6 +15,8 @@
 		732288B51C662DE10005FE29 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 732288B31C662DE10005FE29 /* LaunchScreen.storyboard */; };
 		732288C01C662DE10005FE29 /* MyKit_AudioIO_BasicTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 732288BF1C662DE10005FE29 /* MyKit_AudioIO_BasicTests.m */; };
 		732288CB1C662DE10005FE29 /* MyKit_AudioIO_BasicUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 732288CA1C662DE10005FE29 /* MyKit_AudioIO_BasicUITests.m */; };
+		732288DC1C662E3D0005FE29 /* MyKit_AudioBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 732288D91C662E3D0005FE29 /* MyKit_AudioBuffer.m */; };
+		732288DD1C662E3D0005FE29 /* MyKit_AudioIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 732288DB1C662E3D0005FE29 /* MyKit_AudioIO.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,10 @@
 		732288C61C662DE10005FE29 /* MyKit_AudioIO_BasicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyKit_AudioIO_BasicUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		732288CA1C662DE10005FE29 /* MyKit_AudioIO_BasicUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyKit_AudioIO_BasicUITests.m; sourceTree = "<group>"; };
 		732288CC1C662DE10005FE29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		732288D81C662E3D0005FE29 /* MyKit_AudioBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyKit_AudioBuffer.h; sourceTree = "<group>"; };
+		732288D91C662E3D0005FE29 /* MyKit_AudioBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyKit_AudioBuffer.m; sourceTree = "<group>"; };
+		732288DA1C662E3D0005FE29 /* MyKit_AudioIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyKit_AudioIO.h; sourceTree = "<group>"; };
+		732288DB1C662E3D0005FE29 /* MyKit_AudioIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyKit_AudioIO.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +107,10 @@
 		732288A41C662DE10005FE29 /* MyKit_AudioIO_Basic */ = {
 			isa = PBXGroup;
 			children = (
+				732288D81C662E3D0005FE29 /* MyKit_AudioBuffer.h */,
+				732288D91C662E3D0005FE29 /* MyKit_AudioBuffer.m */,
+				732288DA1C662E3D0005FE29 /* MyKit_AudioIO.h */,
+				732288DB1C662E3D0005FE29 /* MyKit_AudioIO.m */,
 				732288A81C662DE10005FE29 /* AppDelegate.h */,
 				732288A91C662DE10005FE29 /* AppDelegate.m */,
 				732288AB1C662DE10005FE29 /* ViewController.h */,
@@ -271,8 +281,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				732288AD1C662DE10005FE29 /* ViewController.m in Sources */,
+				732288DD1C662E3D0005FE29 /* MyKit_AudioIO.m in Sources */,
 				732288AA1C662DE10005FE29 /* AppDelegate.m in Sources */,
 				732288A71C662DE10005FE29 /* main.m in Sources */,
+				732288DC1C662E3D0005FE29 /* MyKit_AudioBuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
