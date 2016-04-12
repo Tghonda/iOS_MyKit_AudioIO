@@ -13,8 +13,8 @@
 
 @interface ViewController ()
 {
-    MyKit_AudioBuffer   *audio_buf;
-    MyKit_AudioIO       *audio_io;
+    MyKit_AudioBuffer*	_audioBuf;
+    MyKit_AudioIO*		_audioIO;
 }
 @end
 
@@ -24,8 +24,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    audio_buf = [[MyKit_AudioBuffer alloc] initWithBufferSize:30*44100*4];
-    audio_io = [[MyKit_AudioIO alloc] initWithBuffer:audio_buf ];
+    _audioBuf = [[MyKit_AudioBuffer alloc] initWithBufferSize:30*44100*(sizeof)float];
+//	_audioIO = [[MyKit_AudioIO alloc] initWithBuffer:_audioBuf ];
+	_audioIO = [[MyKit_AudioIO alloc] init];
+	_audioIO.delegateAudioBuffer = _audioBuf;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -34,21 +36,21 @@
 }
 
 - (IBAction)pushRec:(id)sender {
-    [audio_io stop];
-    [audio_buf rewindPush];
+    [_audioIO stop];
+    [_audioBuf rewindPush];
     
-    [audio_io rec];
+    [_audioIO rec];
 }
 
 - (IBAction)pushPlay:(id)sender {
-    [audio_io stop];
-    [audio_buf rewindPop];
+    [_audioIO stop];
+    [_audioBuf rewindPop];
     
-    [audio_io play];
+    [_audioIO play];
 }
 
 - (IBAction)pushStop:(id)sender {
-    [audio_io stop];
+    [_audioIO stop];
 }
 
 @end

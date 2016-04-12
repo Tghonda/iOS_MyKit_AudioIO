@@ -11,20 +11,20 @@
 @interface MyKit_AudioBuffer()
 {
     void*	_data;
-    int32_t	_totalSize;
-    int32_t	_popPosition;
-    int32_t	_pushPosition;
+    int		_totalSize;
+    int		_popPosition;
+    int		_pushPosition;
 }
 
-@property (nonatomic) int32_t totalSize;
-@property (nonatomic) int32_t readPosition;
-@property (nonatomic) int32_t writePosition;
+@property (nonatomic) int totalSize;
+@property (nonatomic) int readPosition;
+@property (nonatomic) int writePosition;
 
 @end
 
 @implementation MyKit_AudioBuffer
 
--(id)initWithBufferSize:(int32_t)bufferSize
+-(id)initWithBufferSize:(int)bufferSize
 {
     if (bufferSize <= 0) {
         return nil;
@@ -56,9 +56,9 @@
     //	[super dealloc];		// ARC では super を呼び出してはいけない！（コンパイラーが自動生成する）
 }
 
--(int32_t)push:(void*)buf :(int32_t)size
+-(int)push:(void*)buf :(int)size
 {
-    int32_t len = _totalSize - _pushPosition;
+    int len = _totalSize - _pushPosition;
     if (size > len) {
         size = len;
     }
@@ -68,9 +68,9 @@
     return size;
 }
 
--(int32_t)pop:(void*)buf :(int32_t)size :(double)waitTime
+-(int)pop:(void*)buf :(int)size :(double)waitTime
 {
-    int32_t len = _pushPosition - _popPosition;
+    int len = _pushPosition - _popPosition;
     if (size > len) {
         size = len;
     }
@@ -95,7 +95,7 @@
     return _data;
 }
 
--(int32_t)peekDataSize
+-(int)peekDataSize
 {
     return _pushPosition;
 }
@@ -108,17 +108,17 @@
 */
 @interface MyKit_AudioRingBuffer()
 {
-	void*		_buffer;
-	int32_t		_pushCount;
-	int32_t		_popCount;
-	int32_t		_bufferLength;
+	void*	_buffer;
+	int		_pushCount;
+	int		_popCount;
+	int		_bufferLength;
 
 }
 
 @end
 
 @implementation MyKit_AudioRingBuffer
-- (id)initWithSize:(int32_t)bufferSize
+- (id)initWithSize:(int)bufferSize
 {
 	if ( !(self = [super init]) ) return nil;
 
@@ -146,14 +146,14 @@
     _popCount = 0;
 }
 
-- (int32_t)push:(void*)buf :(int32_t) size
+- (int)push:(void*)buf :(int) size
 {
     if ( _bufferLength < (_pushCount - _popCount) + size ){
         NSLog(@"Ring buffer Overflow !!!!");
 		return -1;		// Over fllow!
     }
-	int32_t rsize = size;
-	int32_t tailLength = _bufferLength - (_pushCount % _bufferLength);
+	int rsize = size;
+	int tailLength = _bufferLength - (_pushCount % _bufferLength);
 	if (size > tailLength) {
 		memcpy(_buffer+(_pushCount % _bufferLength), buf, tailLength);
 		size -= tailLength;
@@ -166,7 +166,7 @@
 	return rsize;
 }
 
-- (int32_t)pop:(void*)buf :(int32_t)size :(double)waitTime
+- (int)pop:(void*)buf :(int)size :(double)waitTime
 {
 	// config.
 	static double waitTics = 30.0/1000.0;
@@ -179,8 +179,8 @@
         }
 	}
 
-	int32_t rsize = size;
-	int32_t tailLength = _bufferLength - (_popCount % _bufferLength);
+	int rsize = size;
+	int tailLength = _bufferLength - (_popCount % _bufferLength);
 	if (size > tailLength) {
 		memcpy(buf, _buffer+(_popCount % _bufferLength), tailLength);
 		size -= tailLength;
@@ -208,7 +208,7 @@
 @end
 
 @implementation OFCLinearBuffer
-- (id)initWithSize:(int32_t)bufferSize
+- (id)initWithSize:(int)bufferSize
 {
 	if ( !(self = [super init]) ) return nil;
 
@@ -221,7 +221,7 @@
 	return self;
 }
 
-- (void)pushTail:(void*)buf :(int32_t) size
+- (void)pushTail:(void*)buf :(int) size
 {
 	if (size > _bufferLength) {
 		buf += size - _bufferLength;
@@ -232,7 +232,7 @@
 	memcpy(_buffer + (_bufferLength - size), buf, size);
 }
 
-- (void)pushHead:(void*)buf :(int32_t) size
+- (void)pushHead:(void*)buf :(int) size
 {
 	if (size > _bufferLength) {
 		memcpy(_buffer, buf, _bufferLength);

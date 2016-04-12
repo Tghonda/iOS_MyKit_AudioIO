@@ -9,19 +9,28 @@
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
-// バッファープロトコル
-@protocol MyProtcol_AudioBuffer
+// バッファプロトコル
+@protocol MyKit_AudioIOBuffer
 @required
--(int32_t)push:(void*)data :(int32_t) size;
--(int32_t)pop:(void*)data :(int32_t) size :(double) waitTime;
+-(int32_t)push:(void*)data :(int32_t)size;
+-(int32_t)pop:(void*)data :(int32_t)size :(double)waitTime;
 @end
 
 // AudioIO クラス
 // 設計方針：このクラスはAudioの入出力に限定し、余分な処理は実装しない
 //　出力データが不足している場合の０フィルなどは AudioBuffer に任せる
 //　出力データリクエストの Delegate も同様
+/* 使用時のサンプルコード
+		：
+	audio_buf = [[MyKit_AudioBuffer alloc] initWithBufferSize:30*44100*(sizeof)float];
+	audio_io = [[MyKit_AudioIO alloc] init];
+	audio_io.delegateAudioBuffer = audio_buf;
+		：
+*/　
 @interface MyKit_AudioIO : NSObject
--(id)initWithBuffer:(id <MyProtcol_AudioBuffer>)buffer;
+
+@property (nonatomic, weak) id<MyKit_AudioIOBuffer> delegateAudioBuffer;
+
 -(void)rec;
 -(void)play;
 -(void)stop;

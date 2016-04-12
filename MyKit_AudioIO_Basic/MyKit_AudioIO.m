@@ -25,7 +25,6 @@
     AudioQueueBufferRef _buffersOut[kNumberBuffers];
 }
 
-@property (nonatomic, weak) id<MyProtcol_AudioBuffer> audioBuf;
 
 @end
 
@@ -38,9 +37,10 @@ static void callbackOut(
                         AudioQueueBufferRef  inBuffer)
 {
     MyKit_AudioIO    *ref = (__bridge MyKit_AudioIO *)inUserData;
-    
+    id<MyKit_AudioIOBuffer> audioBuf = ref.delegateAudioBuffer;
+
     //    NSLog(@"CB Out");
-    inBuffer->mAudioDataByteSize = [ref->_audioBuf pop:inBuffer->mAudioData :kSamplesPerBuf * sizeof(Float32): 0.0];
+    inBuffer->mAudioDataByteSize = [audioBuf pop:inBuffer->mAudioData :kSamplesPerBuf * sizeof(Float32): 0.0];
     inBuffer->mPacketDescriptionCount = inBuffer->mAudioDataByteSize/sizeof(Float32);
     AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
 }
@@ -55,20 +55,22 @@ static void callbackIn(
                        const AudioStreamPacketDescription  *inPacketDescs)
 {
 	MyKit_AudioIO    *ref = (__bridge MyKit_AudioIO *)inUserData;
-    
+    id<MyKit_AudioIOBuffer> audioBuf = ref.delegateAudioBuffer;
+
 	//    NSLog(@"CB In:%ld", inBuffer->mAudioDataByteSize);
-	[ref->_audioBuf push:inBuffer->mAudioData :inBuffer->mAudioDataByteSize];
+	[audioBuf push:inBuffer->mAudioData :inBuffer->mAudioDataByteSize];
 	AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
 }
 
--(id)initWithBuffer:(id <MyProtcol_AudioBuffer>)buffer
+-(id)init
 {
     self = [super init];
-    if (self == nil)	return nil;
+    if (!self) {
+		return self;
+	}
 
     isPlaying = false;
     isRecording = false;
-    _audioBuf = buffer;
     
     // オーディオフォーマット
     AudioStreamBasicDescription audioFormat;
@@ -86,7 +88,7 @@ static void callbackIn(
     AudioQueueNewInput(&audioFormat, &callbackIn, (void *)CFBridgingRetain(self), NULL, NULL, 0, &_aQueIn);
     AudioQueueNewOutput(&audioFormat, &callbackOut, (void *)CFBridgingRetain(self), NULL, NULL, 0, &_aQueOut);
     
-    // バッファーをアロケート
+    // IOバッファーをアロケート
     UInt32  bufSize = kSamplesPerBuf * sizeof(Float32);
     for (int idx = 0; idx < kNumberBuffers; idx++) {
         AudioQueueAllocateBuffer(_aQueIn, bufSize, &_buffersIn[idx]);
@@ -107,9 +109,15 @@ static void callbackIn(
 
 -(void)rec
 {
-    if (isRecording)
+    if (isRecording) {
         return;
-    
+    }
+
+	// Audio Buffer が有効か？
+	if (![self.delegateAudioBuffer respondsToSelector:@selector(push::)]) {
+		return;
+	}
+
     isRecording = true;
     
     for (int idx = 0; idx < kNumberBuffers; idx++) {
@@ -123,6 +131,11 @@ static void callbackIn(
     if (isPlaying) {
         [self stop];
     }
+	// Audio Buffer が有効か？
+	if (![self.delegateAudioBuffer respondsToSelector:@selector(pop:::)]) {
+		return;
+	}
+
     isPlaying = true;
     
     for (int idx = 0; idx < kNumberBuffers; idx++) {

@@ -10,17 +10,21 @@
 
 #import "MyKit_AudioIO.h"
 
-@interface MyKit_AudioBuffer : NSObject <MyProtcol_AudioBuffer>
-- (id)initWithBufferSize:(int32_t)bufferSize;
+@interface MyKit_AudioBuffer : NSObject <MyKit_AudioIOBuffer>
+- (id)initWithBufferSize:(int)bufferSize;
 - (void)rewindPush;
 - (void)rewindPop;
 - (void*)getBufferAddr;
-- (int32_t)peekDataSize;
+- (int)peekDataSize;
+- (int)push:(void*)buf :(int)size
+- (int)pop:(void*)buf :(int)size :(double)waitTime
 @end
 
-@interface MyKit_AudioRingBuffer : NSObject <MyProtcol_AudioBuffer>
-- (id)initWithSize:(int32_t)bufferSize;
+@interface MyKit_AudioRingBuffer : NSObject <MyKit_AudioIOBuffer>
+- (id)initWithSize:(int)bufferSize;
 - (void)reset;
+- (int)push:(void*)buf :(int)size
+- (int)pop:(void*)buf :(int)size :(double)waitTime
 @end
 
 
