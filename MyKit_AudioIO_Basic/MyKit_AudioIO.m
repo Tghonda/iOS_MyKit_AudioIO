@@ -67,8 +67,8 @@ static void callbackIn(
 		return self;
 	}
 
-    isPlaying = false;
-    isRecording = false;
+    isPlaying = NO;
+    isRecording = NO;
     
     // オーディオフォーマット
     AudioStreamBasicDescription audioFormat;
@@ -116,7 +116,7 @@ static void callbackIn(
 		return -1;
 	}
 
-    isRecording = true;
+    isRecording = YES;
     
     for (int idx = 0; idx < kNumberBuffers; idx++) {
         AudioQueueEnqueueBuffer(_aQueIn, _buffersIn[idx], 0, NULL);
@@ -136,7 +136,7 @@ static void callbackIn(
 		return -1;
 	}
 
-    isPlaying = true;
+    isPlaying = YES;
     
     for (int idx = 0; idx < kNumberBuffers; idx++) {
         [_audioBuf pop:_buffersOut[idx]->mAudioData
@@ -158,14 +158,14 @@ static void callbackIn(
 -(void)stopRec
 {
     AudioQueueStop(_aQueIn, YES);
-    isRecording = false;
+    isRecording = NO;
 }
 
 -(void)stopPlay
 {
     AudioQueueStop(_aQueOut, YES);
     AudioQueueFlush(_aQueOut);
-    isPlaying = false;
+    isPlaying = NO;
 }
 
 @end
