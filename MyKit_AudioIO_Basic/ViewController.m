@@ -27,7 +27,7 @@
     _audioBuf = [[MyKit_AudioBuffer alloc] initWithBufferSize:30*44100*(sizeof)float];
 //	_audioIO = [[MyKit_AudioIO alloc] initWithBuffer:_audioBuf ];
 	_audioIO = [[MyKit_AudioIO alloc] init];
-	_audioIO.delegateAudioBuffer = _audioBuf;
+	_audioIO.audioIODelegate = _audioBuf;
 }
 
 - (void)didReceiveMemoryWarning {

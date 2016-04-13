@@ -10,9 +10,9 @@
 
 
 // config.
-#define kNumberBuffers	3
-#define kSamplesPerBuf	1024
-#define kSamplingRate   44100
+static const int kNumberBuffers = 3;		// 3以上を推奨だが、3で十分
+static const int kSamplesPerBuf = 1024;
+static const int kSamplingRate  = 44100;
 
 
 @interface MyKit_AudioIO()
@@ -24,8 +24,6 @@
     AudioQueueBufferRef _buffersIn[kNumberBuffers];
     AudioQueueBufferRef _buffersOut[kNumberBuffers];
 }
-
-
 @end
 
 @implementation MyKit_AudioIO
@@ -37,7 +35,7 @@ static void callbackOut(
                         AudioQueueBufferRef  inBuffer)
 {
     MyKit_AudioIO    *ref = (__bridge MyKit_AudioIO *)inUserData;
-    id<MyKit_AudioIOBuffer> audioBuf = ref.delegateAudioBuffer;
+    id<MyKit_AudioIOBuffer> audioBuf = ref.audioIODelegate;
 
     //    NSLog(@"CB Out");
     inBuffer->mAudioDataByteSize = [audioBuf pop:inBuffer->mAudioData :kSamplesPerBuf * sizeof(Float32): 0.0];
@@ -55,7 +53,7 @@ static void callbackIn(
                        const AudioStreamPacketDescription  *inPacketDescs)
 {
 	MyKit_AudioIO    *ref = (__bridge MyKit_AudioIO *)inUserData;
-    id<MyKit_AudioIOBuffer> audioBuf = ref.delegateAudioBuffer;
+    id<MyKit_AudioIOBuffer> audioBuf = ref.audioIODelegate;
 
 	//    NSLog(@"CB In:%ld", inBuffer->mAudioDataByteSize);
 	[audioBuf push:inBuffer->mAudioData :inBuffer->mAudioDataByteSize];
@@ -107,15 +105,15 @@ static void callbackIn(
     AudioQueueDispose(_aQueOut, YES);
 }
 
--(void)rec
+-(int)rec
 {
     if (isRecording) {
         return;
     }
 
 	// Audio Buffer が有効か？
-	if (![self.delegateAudioBuffer respondsToSelector:@selector(push::)]) {
-		return;
+	if (![self.audioIODelegate respondsToSelector:@selector(push::)]) {
+		return -1;
 	}
 
     isRecording = true;
@@ -123,17 +121,19 @@ static void callbackIn(
     for (int idx = 0; idx < kNumberBuffers; idx++) {
         AudioQueueEnqueueBuffer(_aQueIn, _buffersIn[idx], 0, NULL);
     }
+
     AudioQueueStart(_aQueIn, NULL);
+	return 0;
 }
 
--(void)play
+-(int)play
 {
     if (isPlaying) {
         [self stop];
     }
 	// Audio Buffer が有効か？
-	if (![self.delegateAudioBuffer respondsToSelector:@selector(pop:::)]) {
-		return;
+	if (![self.audioIODelegate respondsToSelector:@selector(pop:::)]) {
+		return -1;
 	}
 
     isPlaying = true;
@@ -146,6 +146,7 @@ static void callbackIn(
     }
     
     AudioQueueStart(_aQueOut, NULL);
+	return 0;
 }
 
 -(void)stop

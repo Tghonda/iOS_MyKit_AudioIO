@@ -137,6 +137,7 @@
 {
     if (_buffer) {
         free(_buffer);
+		_buffer = nil;
     }
 }
 
