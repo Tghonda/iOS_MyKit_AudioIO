@@ -18,8 +18,8 @@
 - (void*)getBufferAddr;
 - (int)peekDataSize;
 // delegate method.
-- (int)push:(void*)buf :(int)size
-- (int)pop:(void*)buf :(int)size :(double)waitTime
+- (int)push:(void*)buf :(int)size;
+- (int)pop:(void*)buf :(int)size :(double)waitTime;
 @end
 
 // リング型バッファ
@@ -27,8 +27,8 @@
 - (id)initWithSize:(int)bufferSize;
 - (void)reset;
 // delegate method.
-- (int)push:(void*)buf :(int)size
-- (int)pop:(void*)buf :(int)size :(double)waitTime
+- (int)push:(void*)buf :(int)size;
+- (int)pop:(void*)buf :(int)size :(double)waitTime;
 @end
 
 

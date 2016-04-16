@@ -35,7 +35,7 @@ static void callbackOut(
                         AudioQueueBufferRef  inBuffer)
 {
     MyKit_AudioIO    *ref = (__bridge MyKit_AudioIO *)inUserData;
-    id<MyKit_AudioIOBuffer> audioBuf = ref.audioIODelegate;
+    id<MyKit_AudioIODelegate> audioBuf = ref.audioIODelegate;
 
     //    NSLog(@"CB Out");
     inBuffer->mAudioDataByteSize = [audioBuf pop:inBuffer->mAudioData :kSamplesPerBuf * sizeof(Float32): 0.0];
@@ -53,7 +53,7 @@ static void callbackIn(
                        const AudioStreamPacketDescription  *inPacketDescs)
 {
 	MyKit_AudioIO    *ref = (__bridge MyKit_AudioIO *)inUserData;
-    id<MyKit_AudioIOBuffer> audioBuf = ref.audioIODelegate;
+    id<MyKit_AudioIODelegate> audioBuf = ref.audioIODelegate;
 
 	//    NSLog(@"CB In:%ld", inBuffer->mAudioDataByteSize);
 	[audioBuf push:inBuffer->mAudioData :inBuffer->mAudioDataByteSize];
@@ -108,11 +108,11 @@ static void callbackIn(
 -(int)rec
 {
     if (isRecording) {
-        return;
+        return 0;
     }
 
 	// Audio Buffer が有効か？
-	if (![self.audioIODelegate respondsToSelector:@selector(push::)]) {
+    if ( ![self.audioIODelegate respondsToSelector:@selector(push::)] ) {
 		return -1;
 	}
 
@@ -139,7 +139,7 @@ static void callbackIn(
     isPlaying = YES;
     
     for (int idx = 0; idx < kNumberBuffers; idx++) {
-        [_audioBuf pop:_buffersOut[idx]->mAudioData
+        [self.audioIODelegate pop:_buffersOut[idx]->mAudioData
                       :kSamplesPerBuf * sizeof(Float32) : 0.0];
         _buffersOut[idx]->mAudioDataByteSize = kSamplesPerBuf  * sizeof(Float32);
         AudioQueueEnqueueBuffer(_aQueOut, _buffersOut[idx], 0, NULL);

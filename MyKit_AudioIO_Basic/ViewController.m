@@ -24,8 +24,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    _audioBuf = [[MyKit_AudioBuffer alloc] initWithBufferSize:30*44100*(sizeof)float];
-//	_audioIO = [[MyKit_AudioIO alloc] initWithBuffer:_audioBuf ];
+    // Audio Buffer 作成
+    _audioBuf = [[MyKit_AudioBuffer alloc] initWithBufferSize:30*44100*sizeof(float)];
+    
+    // Audio IO 作成 ＆ Audio Buffer セット
 	_audioIO = [[MyKit_AudioIO alloc] init];
 	_audioIO.audioIODelegate = _audioBuf;
 }

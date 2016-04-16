@@ -10,7 +10,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 // バッファプロトコル
-@protocol MyKit_AudioIODelegate
+@protocol MyKit_AudioIODelegate <NSObject>
 @optional
 -(int32_t)push:(void*)data :(int32_t)size;
 -(int32_t)pop:(void*)data :(int32_t)size :(double)waitTime;
@@ -26,7 +26,8 @@
 	audio_io = [[MyKit_AudioIO alloc] init];
 	audio_io.audioIODelegate = audio_buf;
 		：
-*/　
+*/
+
 @interface MyKit_AudioIO : NSObject
 
 @property (nonatomic, weak) id<MyKit_AudioIODelegate> audioIODelegate;
